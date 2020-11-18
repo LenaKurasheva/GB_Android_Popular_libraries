@@ -41,12 +41,5 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun setButtonThreeText(text: String) {
         btn_counter3.text = text
     }
-
-//    override fun setButtonText(i: Int, text: String) {
-//        when(i){
-//            0 -> btn_counter1.text = text
-//            1 -> btn_counter2.text = text
-//            2 -> btn_counter3.text = text
-//        }
-//    }
+    
 }
