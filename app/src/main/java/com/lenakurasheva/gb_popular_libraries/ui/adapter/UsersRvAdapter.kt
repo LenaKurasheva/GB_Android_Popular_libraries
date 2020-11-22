@@ -26,9 +26,7 @@ class UsersRvAdapter(val presenter: IUsersListPresenter) : RecyclerView.Adapter<
 
     override fun getItemCount() = presenter.getCount()
 
-    class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
-        UserItemView,
-        LayoutContainer {
+    class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), UserItemView, LayoutContainer {
         override var pos = -1
 
         override fun setLogin(text: String) = with(containerView){
