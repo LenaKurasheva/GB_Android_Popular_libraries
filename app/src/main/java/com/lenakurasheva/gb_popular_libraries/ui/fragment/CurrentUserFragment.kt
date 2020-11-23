@@ -1,9 +1,7 @@
 package com.lenakurasheva.gb_popular_libraries.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.lenakurasheva.gb_popular_libraries.R
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.CurrentUserPresenter
@@ -25,7 +23,7 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
     }
 
     val presenter by moxyPresenter {
-        CurrentUserPresenter(App.instance.router)
+        CurrentUserPresenter(App.instance.router, this.arguments?.getParcelable<GithubUser>("user") )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -33,8 +31,8 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
 
     override fun backPressed() = presenter.backClick()
 
-    override fun showData() {
-        login.setText(this.arguments?.getParcelable<GithubUser>("user")?.login)
+    override fun setLogin(userLogin: String?) {
+        login.setText(userLogin)
     }
 
 }
