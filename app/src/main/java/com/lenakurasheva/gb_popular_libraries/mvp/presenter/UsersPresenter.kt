@@ -6,10 +6,13 @@ import com.lenakurasheva.gb_popular_libraries.mvp.presenter.list.IUsersListPrese
 import com.lenakurasheva.gb_popular_libraries.mvp.view.UsersView
 import com.lenakurasheva.gb_popular_libraries.mvp.view.list.UserItemView
 import com.lenakurasheva.gb_popular_libraries.navigation.Screens
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 
-class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo) : MvpPresenter<UsersView>() {
+class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val scheduler: Scheduler) : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUsersListPresenter {
         override var itemClickListener: ((UserItemView) -> Unit)? = null
@@ -25,6 +28,7 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo) : MvpPr
     }
 
     val usersListPresenter = UsersListPresenter()
+    lateinit var disposable: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -37,14 +41,25 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo) : MvpPr
     }
 
     fun loadData() {
-        val users = usersRepo.getUsers()
-        usersListPresenter.users.clear()
-        usersListPresenter.users.addAll(users)
-        viewState.updateUsersList()
+        var users = listOf<GithubUser>()
+        disposable = usersRepo.getUsers()
+            .retry(3)
+            .subscribeOn(Schedulers.io())
+            .observeOn(scheduler)
+            .subscribe (
+                { users = it },
+                { println("onError: ${it.message}") },
+                { usersListPresenter.users.clear()
+                  usersListPresenter.users.addAll(users)
+                  viewState.updateUsersList() })
     }
 
     fun backClick(): Boolean {
         router.exit()
         return true
+    }
+
+    fun onFragmentDestroy() {
+        disposable.dispose()
     }
 }

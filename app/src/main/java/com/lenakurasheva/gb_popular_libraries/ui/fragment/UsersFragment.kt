@@ -12,6 +12,7 @@ import com.lenakurasheva.gb_popular_libraries.mvp.view.UsersView
 import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UsersRvAdapter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_users.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -23,7 +24,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val presenter by moxyPresenter {
-        UsersPresenter(App.instance.router, GithubUsersRepo())
+        UsersPresenter(App.instance.router, GithubUsersRepo(), AndroidSchedulers.mainThread())
     }
 
     val adapter by lazy {
@@ -43,5 +44,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     override fun backPressed() = presenter.backClick()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onFragmentDestroy()
+    }
 
 }
