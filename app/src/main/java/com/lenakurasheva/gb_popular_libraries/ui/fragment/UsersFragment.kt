@@ -45,9 +45,4 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun backPressed() = presenter.backClick()
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onFragmentDestroy()
-    }
-
 }

@@ -7,10 +7,10 @@ import com.lenakurasheva.gb_popular_libraries.mvp.view.UsersView
 import com.lenakurasheva.gb_popular_libraries.mvp.view.list.UserItemView
 import com.lenakurasheva.gb_popular_libraries.navigation.Screens
 import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
+
 
 class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val scheduler: Scheduler) : MvpPresenter<UsersView>() {
 
@@ -28,7 +28,8 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val sch
     }
 
     val usersListPresenter = UsersListPresenter()
-    lateinit var disposable: Disposable
+    var disposables = CompositeDisposable()
+
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -41,17 +42,16 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val sch
     }
 
     fun loadData() {
-        var users = listOf<GithubUser>()
-        disposable = usersRepo.getUsers()
+        disposables.add(usersRepo.getUsers()
             .retry(3)
-            .subscribeOn(Schedulers.io())
             .observeOn(scheduler)
-            .subscribe (
-                { users = it },
-                { println("onError: ${it.message}") },
-                { usersListPresenter.users.clear()
-                  usersListPresenter.users.addAll(users)
-                  viewState.updateUsersList() })
+            .subscribe(
+                {
+                    usersListPresenter.users.clear()
+                    usersListPresenter.users.addAll(it)
+                    viewState.updateUsersList()
+                },
+                { println("onError: ${it.message}") }))
     }
 
     fun backClick(): Boolean {
@@ -59,7 +59,8 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val sch
         return true
     }
 
-    fun onFragmentDestroy() {
-        disposable.dispose()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }
