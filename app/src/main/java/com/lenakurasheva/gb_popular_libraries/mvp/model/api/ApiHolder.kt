@@ -19,7 +19,7 @@ object ApiHolder {
 
         val client = OkHttpClient.Builder()
             .callTimeout(30, TimeUnit.SECONDS)
-            .addNetworkInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+            .addNetworkInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
             .build()
 
         Retrofit.Builder()
