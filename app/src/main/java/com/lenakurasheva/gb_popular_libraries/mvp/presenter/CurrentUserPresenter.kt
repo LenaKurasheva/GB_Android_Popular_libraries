@@ -7,6 +7,7 @@ import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUsers
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.list.IUserReposListPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.mvp.view.list.RepoItemView
+import com.lenakurasheva.gb_popular_libraries.navigation.Screens
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
@@ -37,7 +38,8 @@ class CurrentUserPresenter (val router: Router, val user: GithubUser?, val userR
         loadData()
 
         userReposListPresenter.itemClickListener = { view ->
-            //do something
+            val repository = userReposListPresenter.repos[view.pos]
+            router.navigateTo(Screens.RepositoryScreen(repository))
         }
     }
 
