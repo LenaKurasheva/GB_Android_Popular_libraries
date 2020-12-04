@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lenakurasheva.gb_popular_libraries.R
 import com.lenakurasheva.gb_popular_libraries.mvp.model.api.ApiHolder
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
-import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUsersRepo
+import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUserReposRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.CurrentUserPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.ui.App
@@ -34,7 +34,7 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
         CurrentUserPresenter(
             App.instance.router,
             this.arguments?.getParcelable<GithubUser>("user"),
-            RetrofitGithubUsersRepo(
+            RetrofitGithubUserReposRepo(
                 ApiHolder.api
             ),
             AndroidSchedulers.mainThread()
