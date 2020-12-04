@@ -18,5 +18,6 @@ data class RoomGithubRepository(
     val forksCount: String,
     val fullName: String,
     val description: String,
+    val htmlUrl: String,
     val userId: String
 )

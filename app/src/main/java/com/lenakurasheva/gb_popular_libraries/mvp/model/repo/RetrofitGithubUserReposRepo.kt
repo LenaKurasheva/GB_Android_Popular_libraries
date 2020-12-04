@@ -24,6 +24,7 @@ class RetrofitGithubUserReposRepo(val api: IDataSource, val networkStatus: INetw
                                 it.forksCount ?: "",
                                 it.fullName ?: "",
                                 it.description ?: "",
+                                it.htmlUrl ?: "",
                                 roomUser.id
                             )
                         }
@@ -36,7 +37,7 @@ class RetrofitGithubUserReposRepo(val api: IDataSource, val networkStatus: INetw
         } else {
             Single.fromCallable {
                 val roomUser = user.login?.let { db.userDao.findByLogin(it) } ?: throw java.lang.RuntimeException("No such users in database")
-                db.repositoryDao.findForUser(roomUser.id).map { GithubRepository(it.id, it.name, it.forksCount, it.fullName) }
+                db.repositoryDao.findForUser(roomUser.id).map { GithubRepository(it.id, it.name, it.forksCount, it.fullName, it.htmlUrl) }
             }
         }
     }.subscribeOn(Schedulers.io())
