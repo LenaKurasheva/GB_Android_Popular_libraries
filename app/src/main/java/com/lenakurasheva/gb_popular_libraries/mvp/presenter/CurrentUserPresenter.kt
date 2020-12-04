@@ -3,7 +3,6 @@ package com.lenakurasheva.gb_popular_libraries.mvp.presenter
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubRepository
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUserReposRepo
-import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUsersRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.list.IUserReposListPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.mvp.view.list.RepoItemView
@@ -13,7 +12,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 
-class CurrentUserPresenter (val router: Router, val user: GithubUser?, val userReposRepoRetrofit: RetrofitGithubUserReposRepo, val scheduler: Scheduler) : MvpPresenter<CurrentUserView>() {
+class CurrentUserPresenter (val router: Router, val user: GithubUser, val userReposRepoRetrofit: RetrofitGithubUserReposRepo, val scheduler: Scheduler) : MvpPresenter<CurrentUserView>() {
 
     class UserReposListPresenter : IUserReposListPresenter {
         override var itemClickListener: ((RepoItemView) -> Unit)? = null
@@ -48,10 +47,7 @@ class CurrentUserPresenter (val router: Router, val user: GithubUser?, val userR
     }
 
     fun loadData() {
-        var userRepos = user?.reposUrl
-        userRepos?.let {
-             disposables.add(
-                 userReposRepoRetrofit.getUserRepos(userRepos)
+                 userReposRepoRetrofit.getUserRepos(user)
                 .retry(3)
                 .observeOn(scheduler)
                 .subscribe(
@@ -61,9 +57,9 @@ class CurrentUserPresenter (val router: Router, val user: GithubUser?, val userR
                         viewState.updateUsersList()
                     },
                     { println("onError: ${it.message}") })
-            )
+
         }
-    }
+
 
     fun backClick(): Boolean {
         viewState.removeLoginFromToolbar()
