@@ -14,6 +14,7 @@ import com.lenakurasheva.gb_popular_libraries.mvp.view.UsersView
 import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UsersRvAdapter
+import com.lenakurasheva.gb_popular_libraries.ui.cache.RoomGithubUsersCache
 import com.lenakurasheva.gb_popular_libraries.ui.image.GlideImageLoader
 import com.lenakurasheva.gb_popular_libraries.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -28,7 +29,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val presenter by moxyPresenter {
-        UsersPresenter(App.instance.router, RetrofitGithubUsersRepo(ApiHolder.api, AndroidNetworkStatus(requireContext()), Database.getInstance()), AndroidSchedulers.mainThread())
+        UsersPresenter(App.instance.router, RetrofitGithubUsersRepo(ApiHolder.api, AndroidNetworkStatus(requireContext()), RoomGithubUsersCache(
+            Database.getInstance())), AndroidSchedulers.mainThread())
     }
 
     val adapter by lazy {
