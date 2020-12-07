@@ -1,7 +1,7 @@
 package com.lenakurasheva.gb_popular_libraries.mvp.presenter
 
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
-import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.GithubUsersRepo
+import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUsersRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.list.IUsersListPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.UsersView
 import com.lenakurasheva.gb_popular_libraries.mvp.view.list.UserItemView
@@ -12,7 +12,7 @@ import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 
 
-class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val scheduler: Scheduler) : MvpPresenter<UsersView>() {
+class UsersPresenter(val router: Router, val usersRepoRetrofit: RetrofitGithubUsersRepo, val scheduler: Scheduler) : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUsersListPresenter {
         override var itemClickListener: ((UserItemView) -> Unit)? = null
@@ -22,14 +22,13 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val sch
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
             view.setLogin(user.login)
+            user.avatarUrl?.let { view.loadImage(it) }
         }
-
         override fun getCount() = users.size
     }
 
     val usersListPresenter = UsersListPresenter()
     var disposables = CompositeDisposable()
-
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -42,7 +41,7 @@ class UsersPresenter(val router: Router, val usersRepo: GithubUsersRepo, val sch
     }
 
     fun loadData() {
-        disposables.add(usersRepo.getUsers()
+        disposables.add(usersRepoRetrofit.getUsers()
             .retry(3)
             .observeOn(scheduler)
             .subscribe(

@@ -1,6 +1,8 @@
 package com.lenakurasheva.gb_popular_libraries.ui.activity
 
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.widget.Toolbar
 import com.lenakurasheva.gb_popular_libraries.R
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.MainPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.MainView
@@ -9,6 +11,7 @@ import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
+
 
 class MainActivity : MvpAppCompatActivity(), MainView {
 
@@ -22,6 +25,8 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val toolbar: Toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar)
     }
 
     override fun onResumeFragments() {
