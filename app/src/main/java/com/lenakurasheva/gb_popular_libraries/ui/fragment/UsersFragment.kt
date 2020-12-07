@@ -15,6 +15,7 @@ import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UsersRvAdapter
 import com.lenakurasheva.gb_popular_libraries.ui.cache.RoomGithubUsersCache
+import com.lenakurasheva.gb_popular_libraries.ui.cache.RoomImageCache
 import com.lenakurasheva.gb_popular_libraries.ui.image.GlideImageLoader
 import com.lenakurasheva.gb_popular_libraries.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -34,7 +35,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val adapter by lazy {
-        UsersRvAdapter(presenter.usersListPresenter, GlideImageLoader())
+        UsersRvAdapter(presenter.usersListPresenter, GlideImageLoader(RoomImageCache( Database.getInstance(), requireContext()), AndroidNetworkStatus(requireContext()), AndroidSchedulers.mainThread()))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
