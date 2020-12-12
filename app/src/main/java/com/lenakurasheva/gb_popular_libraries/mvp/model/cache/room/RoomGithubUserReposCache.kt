@@ -1,4 +1,4 @@
-package com.lenakurasheva.gb_popular_libraries.ui.cache
+package com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room
 
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.IGithubUserReposCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubRepository

@@ -15,7 +15,7 @@ import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UserReposRvAdapter
-import com.lenakurasheva.gb_popular_libraries.ui.cache.RoomGithubUserReposCache
+import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUserReposCache
 import com.lenakurasheva.gb_popular_libraries.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_current_user.*

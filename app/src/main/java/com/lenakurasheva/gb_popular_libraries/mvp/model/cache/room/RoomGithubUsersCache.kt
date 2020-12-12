@@ -1,4 +1,4 @@
-package com.lenakurasheva.gb_popular_libraries.ui.cache
+package com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room
 
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.IGithubUsersCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Single
 class RoomGithubUsersCache(val db: Database): IGithubUsersCache {
 
     override fun putUsers(users: List<GithubUser>): Completable {
-        return Completable.fromCallable {
+        return Completable.fromAction() {
             val roomUsers = users.map { user ->
                 RoomGithubUser(
                     user.id ?: "",
@@ -20,7 +20,6 @@ class RoomGithubUsersCache(val db: Database): IGithubUsersCache {
                 )
             }
             db.userDao.insert(roomUsers)
-            users
         }
     }
 

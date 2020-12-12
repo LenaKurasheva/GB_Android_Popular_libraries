@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 
 class GlideImageLoader(val imageCache: IImageCache, val networkStatus: INetworkStatus, val uiScheduler: Scheduler): IImageLoader<ImageView> {
-    
+
     override fun loadInto(url: String, container: ImageView) {
 
         networkStatus.inOnlineSingle().subscribe { isOnline ->

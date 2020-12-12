@@ -1,4 +1,4 @@
-package com.lenakurasheva.gb_popular_libraries.ui.cache
+package com.lenakurasheva.gb_popular_libraries.ui.cache.room
 
 import android.content.Context
 import android.content.ContextWrapper
