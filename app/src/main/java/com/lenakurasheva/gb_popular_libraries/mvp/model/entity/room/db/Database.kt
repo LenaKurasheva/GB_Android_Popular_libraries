@@ -18,15 +18,8 @@ abstract class Database : RoomDatabase() {
     abstract val cachedImageDao: CachedImageDao
 
     companion object {
-        private const val DB_NAME = "database.db"
+        const val DB_NAME = "database.db"
         private var instance: Database? = null
-        fun getInstance() = instance ?: throw RuntimeException("Database has not been created")
-        fun create(context: Context) {
-            instance ?: let {
-                instance = Room.databaseBuilder(context, Database::class.java, DB_NAME)
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
-                    .build()
-            }
-        }
+
     }
 }

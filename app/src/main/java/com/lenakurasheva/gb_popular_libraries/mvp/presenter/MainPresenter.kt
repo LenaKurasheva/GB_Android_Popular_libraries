@@ -4,8 +4,11 @@ import com.lenakurasheva.gb_popular_libraries.mvp.view.MainView
 import com.lenakurasheva.gb_popular_libraries.navigation.Screens
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class MainPresenter(val router: Router): MvpPresenter<MainView>() {
+class MainPresenter(): MvpPresenter<MainView>() {
+
+    @Inject lateinit var router: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

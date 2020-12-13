@@ -13,6 +13,8 @@ import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 
 class CurrentUserPresenter (val router: Router, val user: GithubUser, val userReposRepoRetrofit: RetrofitGithubUserReposRepo, val scheduler: Scheduler) : MvpPresenter<CurrentUserView>() {
+//TODO only user should be in constructor
+
 
     class UserReposListPresenter : IUserReposListPresenter {
         override var itemClickListener: ((RepoItemView) -> Unit)? = null

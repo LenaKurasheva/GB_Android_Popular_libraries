@@ -13,6 +13,8 @@ import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import kotlinx.android.synthetic.main.fragment_repository.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
 class RepositoryFragment : MvpAppCompatFragment(), RepositoryView, BackButtonListener {
 
@@ -26,9 +28,12 @@ class RepositoryFragment : MvpAppCompatFragment(), RepositoryView, BackButtonLis
         }
     }
 
+    @Inject lateinit var router: Router //TODO del
+
     val presenter: RepositoryPresenter by moxyPresenter {
+        App.instance.appComponent.inject(this) //TODO del
         val repository = arguments?.getParcelable<GithubRepository>(REPOSITORY_ARG) as GithubRepository
-        RepositoryPresenter(App.instance.router, repository)
+        RepositoryPresenter(router, repository)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
