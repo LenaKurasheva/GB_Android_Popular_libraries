@@ -1,8 +1,10 @@
 package com.lenakurasheva.gb_popular_libraries.di.modules
 
 import androidx.room.Room
+import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.IGithubUserReposCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.IGithubUsersCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.IImageCache
+import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUserReposCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUsersCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.room.db.Database
 import com.lenakurasheva.gb_popular_libraries.ui.App
@@ -25,8 +27,10 @@ class CacheModule {
 
     @Singleton
     @Provides
-    fun imageCache(database: Database, app: App): IImageCache = RoomImageCache(database, app)
+    fun userReposCache(database: Database): IGithubUserReposCache = RoomGithubUserReposCache(database)
 
-    //TODO currentUserCache
+    @Singleton
+    @Provides
+    fun imageCache(database: Database, app: App): IImageCache = RoomImageCache(database, app)
 
 }

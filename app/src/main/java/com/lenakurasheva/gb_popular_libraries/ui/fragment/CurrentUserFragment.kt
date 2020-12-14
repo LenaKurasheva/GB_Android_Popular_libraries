@@ -6,25 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lenakurasheva.gb_popular_libraries.R
-import com.lenakurasheva.gb_popular_libraries.mvp.model.api.IDataSource
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
-import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.room.db.Database
-import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUserReposRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.CurrentUserPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UserReposRvAdapter
-import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUserReposCache
-import com.lenakurasheva.gb_popular_libraries.mvp.model.network.INetworkStatus
-import com.lenakurasheva.gb_popular_libraries.ui.network.AndroidNetworkStatus
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_current_user.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.terrakok.cicerone.Router
-import javax.inject.Inject
-
 
 class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonListener {
 
@@ -36,21 +26,9 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
         }
     }
 
-//TODO del all above
-    @Inject lateinit var api: IDataSource
-    @Inject lateinit var networkStatus: INetworkStatus
-    @Inject lateinit var database: Database
-    @Inject lateinit var router: Router
-
     val presenter by moxyPresenter {
-
-        App.instance.appComponent.inject(this) //TODO del
-
-        CurrentUserPresenter( //TODO здесь должен остаться только user
-            router,
-            this.arguments?.getParcelable<GithubUser>("user") as GithubUser,
-            RetrofitGithubUserReposRepo(api, networkStatus, RoomGithubUserReposCache(database) ),
-            AndroidSchedulers.mainThread()
+        CurrentUserPresenter(
+            this.arguments?.getParcelable<GithubUser>("user") as GithubUser
         ).apply { App.instance.appComponent.inject(this) }
     }
 

@@ -15,5 +15,5 @@ class ImageLoaderModule {
 
     @Singleton
     @Provides
-    fun glideImageLoader(imageCache: IImageCache, networkStatus: INetworkStatus, uiScheduler: Scheduler): IImageLoader<ImageView> = GlideImageLoader(imageCache, networkStatus, uiScheduler)
+    fun imageLoader(imageCache: IImageCache, networkStatus: INetworkStatus, uiScheduler: Scheduler): IImageLoader<ImageView> = GlideImageLoader(imageCache, networkStatus, uiScheduler)
 }
