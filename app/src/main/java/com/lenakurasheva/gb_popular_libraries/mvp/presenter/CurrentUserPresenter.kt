@@ -2,7 +2,7 @@ package com.lenakurasheva.gb_popular_libraries.mvp.presenter
 
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubRepository
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
-import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUserReposRepo
+import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.IGithubUserReposRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.list.IUserReposListPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.mvp.view.list.RepoItemView
@@ -11,8 +11,14 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class CurrentUserPresenter (val router: Router, val user: GithubUser, val userReposRepoRetrofit: RetrofitGithubUserReposRepo, val scheduler: Scheduler) : MvpPresenter<CurrentUserView>() {
+class CurrentUserPresenter (val user: GithubUser) : MvpPresenter<CurrentUserView>() {
+
+    @Inject lateinit var router: Router
+    @Inject lateinit var userReposRepo: IGithubUserReposRepo
+    @Inject lateinit var uiScheduler: Scheduler
+
 
     class UserReposListPresenter : IUserReposListPresenter {
         override var itemClickListener: ((RepoItemView) -> Unit)? = null
@@ -43,13 +49,13 @@ class CurrentUserPresenter (val router: Router, val user: GithubUser, val userRe
     }
 
     fun onResume(){
-        viewState.setLoginToToolbar(userLogin = user?.login)
+        viewState.setLoginToToolbar(userLogin = user.login)
     }
 
     fun loadData() {
-                 userReposRepoRetrofit.getUserRepos(user)
+        userReposRepo.getUserRepos(user)
                 .retry(3)
-                .observeOn(scheduler)
+                .observeOn(uiScheduler)
                 .subscribe(
                     {
                         userReposListPresenter.repos.clear()
