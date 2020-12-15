@@ -22,13 +22,14 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val presenter by moxyPresenter {
+        App.instance.initUserComponent()
         UsersPresenter().apply {
-            App.instance.appComponent.inject(this)
+           App.instance.userSubcomponent?.inject(this)
         }
     }
 
     val adapter by lazy {
-        UsersRvAdapter(presenter.usersListPresenter).apply { App.instance.appComponent.inject(this)}
+        UsersRvAdapter(presenter.usersListPresenter).apply { App.instance.userSubcomponent?.inject(this)}
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -45,4 +46,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun backPressed() = presenter.backClick()
 
+    override fun onDestroy(){
+        super.onDestroy()
+        App.instance.releaseUserSubcomponent()
+    }
 }

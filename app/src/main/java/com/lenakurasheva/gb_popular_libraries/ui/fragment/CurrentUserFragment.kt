@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lenakurasheva.gb_popular_libraries.R
+import com.lenakurasheva.gb_popular_libraries.di.repository.RepositorySubcomponent
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.CurrentUserPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
@@ -27,9 +28,10 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
     }
 
     val presenter by moxyPresenter {
+        App.instance.initRepositoryComponent()
         CurrentUserPresenter(
             this.arguments?.getParcelable<GithubUser>("user") as GithubUser
-        ).apply { App.instance.appComponent.inject(this) }
+        ).apply { App.instance.repositorySubcomponent?.inject(this) }
     }
 
     val adapter by lazy {
@@ -64,6 +66,11 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
 
     override fun updateUsersList() {
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        App.instance.releaseRepositorySubcomponent()
     }
 
 }
