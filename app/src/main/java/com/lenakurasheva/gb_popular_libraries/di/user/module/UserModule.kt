@@ -1,6 +1,7 @@
 package com.lenakurasheva.gb_popular_libraries.di.user.module
 
 import com.lenakurasheva.gb_popular_libraries.di.UserScope
+import com.lenakurasheva.gb_popular_libraries.di.user.IUserScopeContainer
 import com.lenakurasheva.gb_popular_libraries.mvp.model.api.IDataSource
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.IGithubUsersCache
 import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUsersCache
@@ -8,6 +9,7 @@ import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.room.db.Database
 import com.lenakurasheva.gb_popular_libraries.mvp.model.network.INetworkStatus
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.IGithubUsersRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUsersRepo
+import com.lenakurasheva.gb_popular_libraries.ui.App
 import dagger.Module
 import dagger.Provides
 
@@ -22,4 +24,7 @@ class UserModule {
     @Provides
     fun usersRepo(api: IDataSource, cache: IGithubUsersCache, networkStatus: INetworkStatus): IGithubUsersRepo = RetrofitGithubUsersRepo(api, networkStatus, cache)
 
+    @UserScope
+    @Provides
+    fun scopeContainer(app: App): IUserScopeContainer = app
 }

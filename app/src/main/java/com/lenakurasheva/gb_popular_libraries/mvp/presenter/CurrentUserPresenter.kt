@@ -1,5 +1,6 @@
 package com.lenakurasheva.gb_popular_libraries.mvp.presenter
 
+import com.lenakurasheva.gb_popular_libraries.di.repository.IRepositoryScopeContainer
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubRepository
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.IGithubUserReposRepo
@@ -18,6 +19,7 @@ class CurrentUserPresenter (val user: GithubUser) : MvpPresenter<CurrentUserView
     @Inject lateinit var router: Router
     @Inject lateinit var userReposRepo: IGithubUserReposRepo
     @Inject lateinit var uiScheduler: Scheduler
+    @Inject lateinit var scope: IRepositoryScopeContainer
 
 
     class UserReposListPresenter : IUserReposListPresenter {
@@ -76,6 +78,7 @@ class CurrentUserPresenter (val user: GithubUser) : MvpPresenter<CurrentUserView
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
+        scope.releaseRepositoryScope()
     }
 
 }

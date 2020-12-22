@@ -1,5 +1,6 @@
 package com.lenakurasheva.gb_popular_libraries.mvp.presenter
 
+import com.lenakurasheva.gb_popular_libraries.di.user.IUserScopeContainer
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.IGithubUsersRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.list.IUsersListPresenter
@@ -18,6 +19,7 @@ class UsersPresenter() : MvpPresenter<UsersView>() {
     @Inject lateinit var router: Router
     @Inject lateinit var usersRepoRetrofit: IGithubUsersRepo
     @Inject lateinit var uiScheduler: Scheduler
+    @Inject lateinit var scope: IUserScopeContainer
 
     class UsersListPresenter : IUsersListPresenter {
         override var itemClickListener: ((UserItemView) -> Unit)? = null
@@ -66,5 +68,7 @@ class UsersPresenter() : MvpPresenter<UsersView>() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
+        scope.releaseUserScope()
+        // Тут view уже отсоединена от Moxy
     }
 }

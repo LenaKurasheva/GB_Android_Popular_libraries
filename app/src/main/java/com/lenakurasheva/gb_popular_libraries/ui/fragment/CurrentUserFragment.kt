@@ -70,7 +70,7 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
 
     override fun onDestroy() {
         super.onDestroy()
-        App.instance.releaseRepositorySubcomponent()
+//        App.instance.releaseRepositorySubcomponent() - moved to presenter onDestroy()
     }
 
 }

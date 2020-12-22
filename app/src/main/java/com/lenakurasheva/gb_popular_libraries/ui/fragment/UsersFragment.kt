@@ -48,6 +48,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun onDestroy(){
         super.onDestroy()
-        App.instance.releaseUserSubcomponent()
+//        App.instance.releaseUserSubcomponent() - перенесла в UsersPresenter onDestroy(), иначе при повороте уничтожается скоуп и в адаплер не инжектится imageLoader
     }
 }
