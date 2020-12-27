@@ -7,13 +7,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lenakurasheva.gb_popular_libraries.R
 import com.lenakurasheva.gb_popular_libraries.mvp.model.api.ApiHolder
+import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.room.db.Database
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUsersRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.UsersPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.UsersView
 import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UsersRvAdapter
+import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUsersCache
+import com.lenakurasheva.gb_popular_libraries.ui.cache.room.RoomImageCache
 import com.lenakurasheva.gb_popular_libraries.ui.image.GlideImageLoader
+import com.lenakurasheva.gb_popular_libraries.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_users.*
 import moxy.MvpAppCompatFragment
@@ -26,11 +30,13 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val presenter by moxyPresenter {
-        UsersPresenter(App.instance.router, RetrofitGithubUsersRepo(ApiHolder.api), AndroidSchedulers.mainThread())
+        UsersPresenter(App.instance.router, RetrofitGithubUsersRepo(ApiHolder.api, AndroidNetworkStatus(requireContext()), RoomGithubUsersCache(
+            Database.getInstance())
+        ), AndroidSchedulers.mainThread())
     }
 
     val adapter by lazy {
-        UsersRvAdapter(presenter.usersListPresenter, GlideImageLoader())
+        UsersRvAdapter(presenter.usersListPresenter, GlideImageLoader(RoomImageCache( Database.getInstance(), requireContext()), AndroidNetworkStatus(requireContext()), AndroidSchedulers.mainThread()))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =

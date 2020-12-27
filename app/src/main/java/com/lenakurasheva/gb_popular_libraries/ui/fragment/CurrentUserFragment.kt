@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lenakurasheva.gb_popular_libraries.R
 import com.lenakurasheva.gb_popular_libraries.mvp.model.api.ApiHolder
 import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.GithubUser
+import com.lenakurasheva.gb_popular_libraries.mvp.model.entity.room.db.Database
 import com.lenakurasheva.gb_popular_libraries.mvp.model.repo.RetrofitGithubUserReposRepo
 import com.lenakurasheva.gb_popular_libraries.mvp.presenter.CurrentUserPresenter
 import com.lenakurasheva.gb_popular_libraries.mvp.view.CurrentUserView
 import com.lenakurasheva.gb_popular_libraries.ui.App
 import com.lenakurasheva.gb_popular_libraries.ui.BackButtonListener
 import com.lenakurasheva.gb_popular_libraries.ui.adapter.UserReposRvAdapter
+import com.lenakurasheva.gb_popular_libraries.mvp.model.cache.room.RoomGithubUserReposCache
+import com.lenakurasheva.gb_popular_libraries.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_current_user.*
 import moxy.MvpAppCompatFragment
@@ -33,10 +36,9 @@ class CurrentUserFragment : MvpAppCompatFragment(), CurrentUserView, BackButtonL
     val presenter by moxyPresenter {
         CurrentUserPresenter(
             App.instance.router,
-            this.arguments?.getParcelable<GithubUser>("user"),
-            RetrofitGithubUserReposRepo(
-                ApiHolder.api
-            ),
+            this.arguments?.getParcelable<GithubUser>("user") as GithubUser,
+            RetrofitGithubUserReposRepo(ApiHolder.api, AndroidNetworkStatus(requireContext()), RoomGithubUserReposCache(
+                Database.getInstance()) ),
             AndroidSchedulers.mainThread()
         )
     }
